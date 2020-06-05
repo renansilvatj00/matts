@@ -85,15 +85,16 @@ var App = new Vue({
             items: [],
             comments: '',
             client: {
-                name: '',
-                phone: '',
-                cep: '',
-                address: '',
-                number: '',
-                complement: '',
-                neighborhood: '',
-                city: '',
-                state: '',
+                name: 'name',
+                phone: 'phone',
+                cep: 'cep',
+                address: 'address',
+                number: 'number',
+                complement: 'complement',
+                neighborhood: 'neighborhood',
+                city: 'city',
+                state: 'state',
+                reference: 'reference',
             },
             payment: {
                 value: '2',
@@ -202,6 +203,24 @@ var App = new Vue({
                 subtotal += item.finalPrice;
             }
 
+            var address = [];
+
+            // Rua A, 123, Bloco B, Jardim Lalala, Mogi, SP - 08745-250
+
+            if (App.cart.client.address) address.push(App.cart.client.address);
+            if (App.cart.client.number) address.push(App.cart.client.number);
+            if (App.cart.client.complement) address.push(App.cart.client.complement);
+            if (App.cart.client.neighborhood) address.push(App.cart.client.neighborhood);
+            if (App.cart.client.city) address.push(App.cart.client.city);
+            if (App.cart.client.state) address.push(App.cart.client.state);
+
+            address = address.join(', ');
+            if (App.cart.client.cep) address += ' - ' + App.cart.client.cep;
+
+            var tax = 4;
+
+            var total = subtotal + tax;
+
             var newText = `*RESUMO DO PEDIDO*
 
 ${items.join('\n')}
@@ -215,16 +234,14 @@ ${items.join('\n')}
 *Nome:* ${App.cart.client.name}
 *Telefone:* ${App.cart.client.phone}
 
-*Endereço:* Rua São Francisco, nº: 121
-*Bairro:* Vila Bela Flor
-*Complemento do endereço:* Condomínio Vida Bella 2, BLOCO 20, APTO. 24
-*Ponto de Referência:* Próximo a JSL empresa
+*Endereço:* ${address}
+*Ponto de Referência:* ${App.cart.client.reference}
 
-*Taxa de Entrega:* R$ 7,00
+*Taxa de Entrega:* R$ ${number_format(tax, 2, ',', '.')}
 
 ----------------------------------
 
-*TOTAL:* R$ R$ 45,00`;
+*TOTAL:* R$ R$ ${number_format(total, 2, ',', '.')}`;
 
             App.whatsapp.text = newText;
 
