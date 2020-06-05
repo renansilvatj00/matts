@@ -1,0 +1,217 @@
+@red: darken(#EC3237, 15%);
+@red-dark: darken(@red, 15%);
+
+@font-face {
+    font-family: "Western Bang Bang";
+    src:
+        url("./assets/fonts/western_bang_bang/Western Bang Bang.woff") format("woff"),
+        url("./assets/fonts/western_bang_bang/Western Bang Bang.otf") format("opentype");
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    padding-top: 50px;
+    background-image: url('./assets/images/sandpaper/sandpaper/sandpaper.png');
+    color: #444;
+}
+
+.btn {
+    border-radius: 0;
+}
+
+.page-header {
+    font-family: 'Western Bang Bang';
+    font-size: 36px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-color: rgb(155, 30, 33);
+    color: @red;
+
+    &.black {
+        border-color: #999 !important;
+        color: #444 !important;
+    }
+}
+
+.form-control {
+    border-radius: 0;
+    border-color: #999;
+}
+
+// --------------------------
+
+.table-western {
+    th {
+        font-family: 'Western Bang Bang';
+        font-size: 20px;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: @red;
+    }
+
+    .text {
+        height: 34px;
+        line-height: 34px;
+    }
+}
+
+.spikes {
+    position: relative;
+    padding-top: 30px;
+    padding-bottom: 60px;
+    margin-top: 60px;
+    background: #fff;
+}
+
+.spikes::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    left: -0%;
+    bottom: 100%;
+    z-index: 10;
+    display: block;
+    height: 25px;
+    background-size: 25px 100%;
+    background-image:
+        linear-gradient(45deg, #fff 25%, transparent 25%),
+        linear-gradient(-45deg, #fff 25%, transparent 25%);
+    background-position: 0 0;
+}
+
+.mt-60 {
+    margin-top: 60px;
+}
+
+.btn-western {
+    color: #ffffff;
+    background-color: #C01216;
+    border-color: #9E090C;
+    border-radius: 0;
+}
+
+.btn-western:hover,
+.btn-western:focus,
+.btn-western:active,
+.btn-western.active,
+.open .dropdown-toggle.btn-western {
+    color: #ffffff;
+    background-color: #D11F22;
+    border-color: #9E090C;
+}
+
+.btn-western:active,
+.btn-western.active,
+.open .dropdown-toggle.btn-western {
+    background-image: none;
+}
+
+.btn-western.disabled,
+.btn-western[disabled],
+fieldset[disabled] .btn-western,
+.btn-western.disabled:hover,
+.btn-western[disabled]:hover,
+fieldset[disabled] .btn-western:hover,
+.btn-western.disabled:focus,
+.btn-western[disabled]:focus,
+fieldset[disabled] .btn-western:focus,
+.btn-western.disabled:active,
+.btn-western[disabled]:active,
+fieldset[disabled] .btn-western:active,
+.btn-western.disabled.active,
+.btn-western[disabled].active,
+fieldset[disabled] .btn-western.active {
+    background-color: #C01216;
+    border-color: #9E090C;
+}
+
+.btn-western .badge {
+    color: #C01216;
+    background-color: #ffffff;
+}
+
+.page {
+    // padding-bottom: 60px;
+}
+
+.top-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    line-height: 50px;
+
+    background-color: #333;
+
+    font-family: 'Western Bang Bang';
+    font-size: 34px;
+    font-weight: 400;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #fff;
+    z-index: 9999;
+
+    a {
+        color: #fff;
+        text-decoration: none;
+    }
+}
+
+.product-line {
+    position: relative;
+    margin-bottom: 30px;
+
+    .content {
+        margin-right: 90px;
+
+        .name {
+            height: 26px;
+            line-height: 26px;
+            font-family: 'Western Bang Bang';
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+
+        .description {
+            padding-top: 8px;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+    }
+
+    .price {
+        position: absolute;
+        top: 0;
+        right: 40px;
+        height: 26px;
+        line-height: 26px;
+        font-family: 'Western Bang Bang';
+        font-size: 24px;
+    }
+
+    .action {
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        button {
+            background-color: @red;
+            border: 0;
+            border-radius: 0;
+            margin: 0;
+            padding: 0 6px;
+            height: 26px;
+            color: #fff;
+            outline: none;
+        }
+    }
+}

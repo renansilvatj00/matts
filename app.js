@@ -86,18 +86,21 @@ var App = new Vue({
                                 name: 'Lanche 1',
                                 price: 19.99,
                                 priceFormatted: '19,99',
+                                description: 'Qui non qui nisi nulla fugiat incididunt ex eiusmod enim laboris in.',
                             },
                             {
                                 id: 2,
                                 name: 'Lanche 2',
                                 price: 12.59,
                                 priceFormatted: '12,59',
+                                description: 'Qui non qui nisi nulla fugiat incididunt ex eiusmod enim laboris in.',
                             },
                             {
                                 id: 3,
                                 name: 'Lanche 3',
                                 price: 25.45,
                                 priceFormatted: '25,45',
+                                description: 'Qui non qui nisi nulla fugiat incididunt ex eiusmod enim laboris in.',
                             },
                         ],
                     },
@@ -112,12 +115,14 @@ var App = new Vue({
                                 name: 'Coca',
                                 price: 5.00,
                                 priceFormatted: '5,00',
+                                description: 'Qui non qui nisi nulla fugiat incididunt ex eiusmod enim laboris in.',
                             },
                             {
                                 id: 5,
                                 name: 'Fanta',
                                 price: 4.00,
                                 priceFormatted: '4,00',
+                                description: 'Qui non qui nisi nulla fugiat incididunt ex eiusmod enim laboris in.',
                             },
                         ],
                     },
@@ -312,7 +317,9 @@ var App = new Vue({
             var subtotal = 0;
             for (var i in App.cart.items) {
                 var item = App.cart.items[i];
-                items.push(`R$ ${number_format(item.finalPrice, 2, ',', '.')} -> ${item.amount}x ${item.name} (R$ ${number_format(item.price, 2, ',', '.')})`);
+                items.push(`${item.amount}x ${item.name} (R$ ${number_format(item.price, 2, ',', '.')})
+    = R$ ${number_format(item.finalPrice, 2, ',', '.')}
+`);
                 subtotal += item.finalPrice;
             }
 
