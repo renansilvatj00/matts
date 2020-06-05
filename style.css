@@ -67,11 +67,26 @@ body {
 .mt-60 {
   margin-top: 60px;
 }
+.ml-10 {
+  margin-left: 10px;
+}
+.mr-10 {
+  margin-right: 10px;
+}
 .btn-western {
   color: #ffffff;
   background-color: #C01216;
   border-color: #9E090C;
   border-radius: 0;
+}
+.color-red {
+  color: #c01216;
+}
+.font-western {
+  font-family: 'Western Bang Bang';
+  font-size: 36px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 .btn-western:hover,
 .btn-western:focus,
@@ -164,12 +179,7 @@ fieldset[disabled] .btn-western.active {
   right: 0;
 }
 .product-line .action button {
-  background-color: #c01216;
-  border: 0;
-  border-radius: 0;
   margin: 0;
   padding: 0 6px;
   height: 26px;
-  color: #fff;
-  outline: none;
 }

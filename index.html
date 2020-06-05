@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matts Burguer</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./style.css?v=2">
 </head>
 
 <body>
     <header class="top-header">
-        <a href="#/">Matts Burguer</a>
+        <a href="#/">Matt's Burguer</a>
     </header>
 
     <div id="AppVue">
@@ -26,19 +26,19 @@
 
             <div class="container">
 
-                <div v-for="category in categories.list">
+                <div v-for="category in categories">
                     <h2 class="page-header" :data-category-id="category.id">{{category.name}}</h2>
 
-                    <div class="product-line" v-for="product in category.products.list">
+                    <div class="product-line" v-for="product in category.products">
                         <div class="content">
                             <div class="name">{{product.name}}</div>
                             <div class="description">{{product.description}}</div>
                         </div>
 
-                        <div class="price">{{product.price}}</div>
+                        <div class="price">{{product.priceFormatted}}</div>
 
                         <div class="action">
-                            <button type="button" @click.prevent="addProductToCart(product)">
+                            <button type="button" class="btn btn-western" @click.prevent="addProductToCart(product)">
                                 <span class="glyphicon glyphicon-plus"></span>
                             </button>
                         </div>
@@ -133,21 +133,21 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-3">
                             <div class="form-group">
-                                <label for="iptCep">CEP</label>
+                                <label for="iptCep">CEP <span class="text-danger">*</span></label>
                                 <input type="text" id="iptCep" class="form-control" v-model="cart.client.cep">
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="iptAddress">Endereço</label>
+                        <label for="iptAddress">Endereço <span class="text-danger">*</span></label>
                         <input type="text" id="iptAddress" class="form-control" v-model="cart.client.address">
                     </div>
 
                     <div class="row">
                         <div class="col-xs-12 col-sm-6">
                             <div class="form-group">
-                                <label for="iptNumber">Número</label>
+                                <label for="iptNumber">Número <span class="text-danger">*</span></label>
                                 <input type="text" id="iptNumber" class="form-control" v-model="cart.client.number">
                             </div>
                         </div>
@@ -163,21 +163,21 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-4">
                             <div class="form-group">
-                                <label for="iptNeighborhood">Bairro</label>
+                                <label for="iptNeighborhood">Bairro <span class="text-danger">*</span></label>
                                 <input type="text" id="iptNeighborhood" class="form-control" v-model="cart.client.neighborhood">
                             </div>
                         </div>
 
                         <div class="col-xs-12 col-sm-4">
                             <div class="form-group">
-                                <label for="iptCity">Cidade</label>
+                                <label for="iptCity">Cidade <span class="text-danger">*</span></label>
                                 <input type="text" id="iptCity" class="form-control" v-model="cart.client.city">
                             </div>
                         </div>
 
                         <div class="col-xs-12 col-sm-4">
                             <div class="form-group">
-                                <label for="iptState">Estado</label>
+                                <label for="iptState">Estado <span class="text-danger">*</span></label>
                                 <input type="text" id="iptState" class="form-control" v-model="cart.client.state">
                             </div>
                         </div>
@@ -253,10 +253,14 @@
                         </div>
 
                         <div v-if="cart.payment.type === '2' && cart.payment.diff === '1'">
-                            <div class="form-group">
-                                <label for="iptPaymentValue">Toco para quanto?</label>
-                                <input type="text" id="iptPaymentValue" class="form-control"
-                                    v-model="cart.payment.value">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-3">
+                                    <div class="form-group">
+                                        <label for="iptPaymentValue">Troco para quanto?</label>
+                                        <input type="text" id="iptPaymentValue" class="form-control"
+                                            v-model="cart.payment.value">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -274,6 +278,10 @@
             <div class="container text-center">
                 <h2 class="page-header">Link do Whatsapp gerado com sucesso!</h2>
 
+                <p class="lead mt-60">
+                    A <span class="font-western ml-10 mr-10">Matt's Burger</span> agradece o seu pedido.
+                </p>
+
                 <a :href="whatsapp.link" target="_blank" class="btn btn-western btn-lg mt-60">Clique aqui para enviar<br>o
                     pedido
                     pelo Whatsapp</a>
@@ -284,8 +292,17 @@
 
                 <hr>
 
-                <button type="button" class="btn btn-warning" @click.prevent="goToPage('cardapio')">Ou clique aqui para
-                    alterar o seu pedido</button>
+                <p>
+                    <button type="button" class="btn btn-warning btn-lg" @click.prevent="goToPage('cardapio')">
+                        Ou clique aqui para alterar o seu pedido
+                    </button>
+                </p>
+
+                <p>
+                    <button type="button" class="btn btn-success btn-lg" @click.prevent="newOrder()">
+                        Novo Pedido
+                    </button>
+                </p>
 
             </div>
         </div>
@@ -297,7 +314,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
     <script src="./fmroute.js"></script>
-    <script src="./app.js"></script>
+    <script src="./app.js?v=2"></script>
 
 </body>
 

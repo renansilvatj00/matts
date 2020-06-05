@@ -74,61 +74,7 @@ var App = new Vue({
             pageFinalizacao: false,
             pageWhatsappLink: false,
         },
-        categories: {
-            list: [
-                {
-                    id: 1,
-                    name: 'Lanches',
-                    products: {
-                        list: [
-                            {
-                                id: 1,
-                                name: 'Lanche 1',
-                                price: 19.99,
-                                priceFormatted: '19,99',
-                                description: 'Qui non qui nisi nulla fugiat incididunt ex eiusmod enim laboris in.',
-                            },
-                            {
-                                id: 2,
-                                name: 'Lanche 2',
-                                price: 12.59,
-                                priceFormatted: '12,59',
-                                description: 'Qui non qui nisi nulla fugiat incididunt ex eiusmod enim laboris in.',
-                            },
-                            {
-                                id: 3,
-                                name: 'Lanche 3',
-                                price: 25.45,
-                                priceFormatted: '25,45',
-                                description: 'Qui non qui nisi nulla fugiat incididunt ex eiusmod enim laboris in.',
-                            },
-                        ],
-                    },
-                },
-                {
-                    id: 2,
-                    name: 'Bebidas',
-                    products: {
-                        list: [
-                            {
-                                id: 4,
-                                name: 'Coca',
-                                price: 5.00,
-                                priceFormatted: '5,00',
-                                description: 'Qui non qui nisi nulla fugiat incididunt ex eiusmod enim laboris in.',
-                            },
-                            {
-                                id: 5,
-                                name: 'Fanta',
-                                price: 4.00,
-                                priceFormatted: '4,00',
-                                description: 'Qui non qui nisi nulla fugiat incididunt ex eiusmod enim laboris in.',
-                            },
-                        ],
-                    },
-                },
-            ],
-        },
+        categories: [],
         cart: {
             items: [],
             comments: '',
@@ -152,10 +98,9 @@ var App = new Vue({
             hash: '',
         },
         whatsapp: {
-            phone: '5511987391075',
+            phone: '',
             text: '',
             link: '',
-            // https://api.whatsapp.com/send?phone=5511987391075&text=
         },
     },
     watch: {
@@ -204,9 +149,19 @@ var App = new Vue({
     },
     methods: {
         init: function () {
-            App.checkLocalStorage();
-            App.updateCartHash();
-            route.run();
+            App.getDb(function () {
+                App.checkLocalStorage();
+                App.updateCartHash();
+                route.run();
+            });
+        },
+
+        getDb: function (cb) {
+            axios.get('/db.json').then(function (response) {
+                App.categories = response.data.categories;
+                App.whatsapp.phone = response.data.whatsapp.phone;
+                cb();
+            });
         },
 
         checkLocalStorage: function () {
@@ -224,6 +179,9 @@ var App = new Vue({
 
         goToPage: function (page) {
             route.go(page);
+            $('html, body').stop().animate({
+                scrollTop: 0,
+            });
         },
 
         goToCategory: function (category) {
@@ -385,11 +343,11 @@ ${items.join('\n')}
                 && App.cart.client.cep
                 && App.cart.client.address
                 && App.cart.client.number
-                && App.cart.client.complement
+                // && App.cart.client.complement
                 && App.cart.client.neighborhood
                 && App.cart.client.city
                 && App.cart.client.state
-                && App.cart.client.reference
+                // && App.cart.client.reference
                 && App.cart.payment.type
             ) {
                 if (
@@ -419,6 +377,11 @@ ${items.join('\n')}
                 cartItem.amount = 1;
             }
             App.addProductToCart(cartItem, cartItem.amount);
+        },
+
+        newOrder: function () {
+            window.localStorage.removeItem('orderHash');
+            window.location.replace('/');
         },
     },
 });

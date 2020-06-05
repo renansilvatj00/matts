@@ -90,11 +90,30 @@ body {
     margin-top: 60px;
 }
 
+.ml-10 {
+    margin-left: 10px;
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
 .btn-western {
     color: #ffffff;
     background-color: #C01216;
     border-color: #9E090C;
     border-radius: 0;
+}
+
+.color-red {
+    color: @red;
+}
+
+.font-western {
+    font-family: 'Western Bang Bang';
+    font-size: 36px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
 }
 
 .btn-western:hover,
@@ -204,14 +223,9 @@ fieldset[disabled] .btn-western.active {
         right: 0;
 
         button {
-            background-color: @red;
-            border: 0;
-            border-radius: 0;
             margin: 0;
             padding: 0 6px;
             height: 26px;
-            color: #fff;
-            outline: none;
         }
     }
 }
