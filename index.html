@@ -6,150 +6,255 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matts Burguer</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        body {
+            padding-top: 60px;
+        }
+
+        .page {
+            padding-bottom: 60px;;
+        }
+    </style>
 </head>
 
 <body>
 
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#/">Matts Burguer</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container" id="AppVue">
 
-
-
-        <h1>Matts Burguer</h1>
-
-        <div class="well">
-            <ul>
-                <li v-for="category in categories.list">{{category.name}}</li>
-            </ul>
+        <div class="page" v-if="page.current === 'home'">
+            Carregando...
         </div>
 
-        <div class="well" v-for="category in categories.list">
-            <h2>{{category.name}}</h2>
+        <div class="page" v-if="page.current === 'cardapio'">
 
-            <ul>
-                <li v-for="product in category.products.list">
-                    {{product.name}}
-                    <button type="button" @click.prevent="addProductToCart(product)">Adicionar</button>
+            <div class="row">
+                <div class="col-xs-12 col-sm-8">
 
-                    <br>
-                    <br>
-                </li>
-            </ul>
+                    <div v-for="category in categories.list">
+                        <h2 class="page-header" :data-category-id="category.id">{{category.name}}</h2>
+
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr v-for="product in category.products.list">
+                                    <td>
+                                        {{product.name}}
+                                    </td>
+                                    <td width="140">
+                                        <button type="button" class="btn btn-success"
+                                            @click.prevent="addProductToCart(product)">Adicionar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div>
+                        <h2 class="page-header">Observações do Pedido</h2>
+
+                        <div class="form-group">
+                            <textarea class="form-control" v-model="cart.comments"
+                                placeholder="Ex: Remover cebola do lanche 1..." rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-4">
+                    <h2 class="page-header">Pedido</h2>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Qtde.</th>
+                                <th>Preço</th>
+                                <th>Subtotal</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody v-if="!cart.items.length">
+                            <tr>
+                                <td colspan="5" style="text-align: center;">Nenhum produto selecionado</td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else>
+                            <tr v-for="cartItem in cart.items">
+                                <td>{{cartItem.name}}</td>
+                                <td>{{cartItem.amount}}</td>
+                                <td>{{cartItem.priceFormatted}}</td>
+                                <td>{{cartItem.finalPriceFormatted}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-xs"
+                                        @click.prevent="removeProductFromCart(cartItem)">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <button type="button" class="btn btn-primary btn-lg btn-block"
+                        @click.prevent="goToPage('/finalizacao')" :disabled="!page.pageFinalizacao">Continuar</button>
+                </div>
+            </div>
+
         </div>
 
-        <div class="well">
-            <h2>Carrinho</h2>
+        <div class="page" v-if="page.current === 'finalizacao'">
+            <p>
+                <button type="button" class="btn btn-default" @click.prevent="goToPage('/cardapio')">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                    Voltar
+                </button>
+            </p>
 
-            <ul>
-                <li>Quantidade de Itens</li>
-                <li>Valor do Pedido</li>
-                <li>Continar</li>
-                <li>{{cart.hash}}</li>
-            </ul>
+            <div class="row">
 
-            <ul>
-                <li v-for="cartItem in cart.items">
-                    <p>Produto: <b>{{cartItem.name}}</b></p>
-                    <p>Quantidade: <b>{{cartItem.amount}}</b></p>
-                    <p>Preço: <b>{{cartItem.finalPrice}}</b></p>
+                <div class="col-xs-12 col-sm-6">
 
-                    <button type="button" @click.prevent="removeProductFromCart(cartItem)">Remover</button>
+                    <div>
+                        <h2 class="page-header">Endereço de entrega</h2>
 
-                    <br>
-                    <br>
-                </li>
-            </ul>
+                        <div class="form-group">
+                            <label for="iptCep">CEP</label>
+                            <input type="text" id="iptCep" class="form-control" v-model="cart.client.cep">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="iptAddress">Endereço</label>
+                            <input type="text" id="iptAddress" class="form-control" v-model="cart.client.address">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="iptNumber">Número</label>
+                            <input type="text" id="iptNumber" class="form-control" v-model="cart.client.number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="iptComplement">Complemento</label>
+                            <input type="text" id="iptComplement" class="form-control" v-model="cart.client.complement">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="iptNeighborhood">Bairro</label>
+                            <input type="text" id="iptNeighborhood" class="form-control"
+                                v-model="cart.client.neighborhood">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="iptCity">Cidade</label>
+                            <input type="text" id="iptCity" class="form-control" v-model="cart.client.city">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="iptState">Estado</label>
+                            <input type="text" id="iptState" class="form-control" v-model="cart.client.state">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="iptReference">Ponto de referência</label>
+                            <input type="text" id="iptReference" class="form-control" v-model="cart.client.reference">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-6">
+
+                    <div>
+                        <h2 class="page-header">Dados do clinte</h2>
+
+                        <div class="form-group">
+                            <label for="iptName">Nome</label>
+                            <input type="text" id="iptName" class="form-control" v-model="cart.client.name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="iptPhone">Telefone</label>
+                            <input type="tel" id="iptPhone" class="form-control" v-model="cart.client.phone">
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 class="page-header">Método de pagamento</h2>
+
+                        <ul>
+                            <li>
+                                <label>
+                                    <input type="radio" value="1" v-model="cart.payment.type">
+                                    Cartão Débito/Crédito
+                                </label>
+                            </li>
+                            <li>
+                                <label>
+                                    <input type="radio" value="2" v-model="cart.payment.type">
+                                    Dinheiro
+                                </label>
+                            </li>
+                        </ul>
+
+                        <div v-if="cart.payment.type === '2'">
+                            <h2 class="page-header">Precisa de troco?</h2>
+
+                            <ul>
+                                <li>
+                                    <label>
+                                        <input type="radio" value="0" v-model="cart.payment.diff">
+                                        Não
+                                    </label>
+                                </li>
+                                <li>
+                                    <label>
+                                        <input type="radio" value="1" v-model="cart.payment.diff">
+                                        Sim
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div v-if="cart.payment.type === '2' && cart.payment.diff === '1'">
+                            <div class="form-group">
+                                <label for="iptPaymentValue">Toco para quanto?</label>
+                                <input type="text" id="iptPaymentValue" class="form-control" v-model="cart.payment.value">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-lg btn-block"
+                        @click.prevent="goToPage('/whatsapp-link')" :disabled="!page.pageWhatsappLink">Finalizar</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="page" v-if="page.current === 'whatsapp-link'">
+            <h2 class="page-header">Link do Whatsapp gerado com sucesso!</h2>
+
+            <a :href="whatsapp.link" target="_blank" class="btn btn-success btn-lg">Clique aqui para enviar<br>o pedido pelo Whatsapp</a>
+
+            <h4 class="page-header">Ou envie o texto abaixo para o número "{{whatsapp.phone}}"</h4>
+
+            <textarea class="form-control" rows="10" readonly>{{whatsapp.text}}</textarea>
 
             <hr>
 
-            <pre>{{whatsapp}}</pre>
-        </div>
+            <button type="button" class="btn btn-warning" @click.prevent="goToPage('cardapio')">Ou clique aqui para alterar o seu pedido</button>
 
-        <hr>
-
-        <div class="well">
-            <h2>Observações do Pedido</h2>
-
-            <textarea class="form-control" v-model="cart.comments" placeholder="Ex: Remover cebola do lanche 1..."></textarea>
-        </div>
-
-        <div class="well">
-            <h2>Dados do clinte</h2>
-
-            <div class="form-group">
-                <label for="iptName">Nome</label>
-                <input type="text" id="iptName" class="form-control" v-model="cart.client.name">
-            </div>
-
-            <div class="form-group">
-                <label for="iptPhone">Telefone</label>
-                <input type="tel" id="iptPhone" class="form-control" v-model="cart.client.phone">
-            </div>
-        </div>
-
-        <div class="well">
-            <h2>Endereço de entrega</h2>
-
-            <div class="form-group">
-                <label for="iptCep">CEP</label>
-                <input type="text" id="iptCep" class="form-control" v-model="cart.client.cep">
-            </div>
-
-            <div class="form-group">
-                <label for="iptAddress">Endereço</label>
-                <input type="text" id="iptAddress" class="form-control" v-model="cart.client.address">
-            </div>
-
-            <div class="form-group">
-                <label for="iptNumber">Número</label>
-                <input type="text" id="iptNumber" class="form-control" v-model="cart.client.number">
-            </div>
-
-            <div class="form-group">
-                <label for="iptComplement">Complemento</label>
-                <input type="text" id="iptComplement" class="form-control" v-model="cart.client.complement">
-            </div>
-
-            <div class="form-group">
-                <label for="iptNeighborhood">Bairro</label>
-                <input type="text" id="iptNeighborhood" class="form-control" v-model="cart.client.neighborhood">
-            </div>
-
-            <div class="form-group">
-                <label for="iptCity">Cidade</label>
-                <input type="text" id="iptCity" class="form-control" v-model="cart.client.city">
-            </div>
-
-            <div class="form-group">
-                <label for="iptState">Estado</label>
-                <input type="text" id="iptState" class="form-control" v-model="cart.client.state">
-            </div>
-
-            <div class="form-group">
-                <label for="iptReference">Ponto de referência</label>
-                <input type="text" id="iptReference" class="form-control" v-model="cart.client.reference">
-            </div>
-        </div>
-
-        <div class="well">
-            <h2>Método de pagamento</h2>
-
-            <ul>
-                <li>
-                    <input type="radio" value="1" v-model="cart.payment.value">
-                    Cartão Débito/Crédito (escolher a bandeira)
-                </li>
-                <li>
-                    <input type="radio" value="2" v-model="cart.payment.value">
-                    Dinheiro (precisa de troco?)
-                </li>
-            </ul>
-
-            <div v-if="cart.payment.value === '2'">
-                <div class="form-group">
-                    <label for="iptPaymentDiff">Precisa de troco? Quanto?</label>
-                    <input type="text" id="iptPaymentDiff" class="form-control" v-model="cart.payment.diff">
-                </div>
-            </div>
         </div>
 
     </div>

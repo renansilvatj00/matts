@@ -32,10 +32,48 @@ function number_format(number, decimals, decPoint, thousandsSep) {
     return s.join(dec)
 }
 
+var route = new FMRoute();
+
+route.get('/', function (vars, next) {
+    App.page.current = 'home';
+    route.go('/cardapio');
+    next();
+});
+
+route.get('/cardapio', function (vars, next) {
+    App.page.current = 'cardapio';
+    next();
+    $('body').scrollspy({ target: '#navCategories' })
+});
+
+route.get('/finalizacao', function (vars, next) {
+    if (!App.page.pageFinalizacao) {
+        route.go('/cardapio');
+        return;
+    }
+
+    App.page.current = 'finalizacao';
+    next();
+});
+
+route.get('/whatsapp-link', function (vars, next) {
+    if (!App.page.pageWhatsappLink) {
+        route.go('/cardapio');
+        return;
+    }
+
+    App.page.current = 'whatsapp-link';
+    next();
+});
 
 var App = new Vue({
     el: '#AppVue',
     data: {
+        page: {
+            current: 'home',
+            pageFinalizacao: false,
+            pageWhatsappLink: false,
+        },
         categories: {
             list: [
                 {
@@ -47,16 +85,19 @@ var App = new Vue({
                                 id: 1,
                                 name: 'Lanche 1',
                                 price: 19.99,
+                                priceFormatted: '19,99',
                             },
                             {
                                 id: 2,
                                 name: 'Lanche 2',
                                 price: 12.59,
+                                priceFormatted: '12,59',
                             },
                             {
                                 id: 3,
                                 name: 'Lanche 3',
                                 price: 25.45,
+                                priceFormatted: '25,45',
                             },
                         ],
                     },
@@ -70,11 +111,13 @@ var App = new Vue({
                                 id: 4,
                                 name: 'Coca',
                                 price: 5.00,
+                                priceFormatted: '5,00',
                             },
                             {
                                 id: 5,
                                 name: 'Fanta',
                                 price: 4.00,
+                                priceFormatted: '4,00',
                             },
                         ],
                     },
@@ -85,20 +128,21 @@ var App = new Vue({
             items: [],
             comments: '',
             client: {
-                name: 'name',
-                phone: 'phone',
-                cep: 'cep',
-                address: 'address',
-                number: 'number',
-                complement: 'complement',
-                neighborhood: 'neighborhood',
-                city: 'city',
-                state: 'state',
-                reference: 'reference',
+                name: '',
+                phone: '',
+                cep: '',
+                address: '',
+                number: '',
+                complement: '',
+                neighborhood: '',
+                city: '',
+                state: '',
+                reference: '',
             },
             payment: {
-                value: '2',
-                diff: 0,
+                type: '1',
+                diff: '0',
+                value: '',
             },
             hash: '',
         },
@@ -119,10 +163,72 @@ var App = new Vue({
         'cart.client.phone': function (a) {
             App.updateCartHash();
         },
+        'cart.client.cep': function (a) {
+            App.updateCartHash();
+        },
+        'cart.client.address': function (a) {
+            App.updateCartHash();
+        },
+        'cart.client.number': function (a) {
+            App.updateCartHash();
+        },
+        'cart.client.complement': function (a) {
+            App.updateCartHash();
+        },
+        'cart.client.neighborhood': function (a) {
+            App.updateCartHash();
+        },
+        'cart.client.city': function (a) {
+            App.updateCartHash();
+        },
+        'cart.client.state': function (a) {
+            App.updateCartHash();
+        },
+        'cart.client.reference': function (a) {
+            App.updateCartHash();
+        },
+        'cart.payment.type': function (a) {
+            App.updateCartHash();
+        },
+        'cart.payment.diff': function (a) {
+            App.updateCartHash();
+        },
+        'cart.payment.value': function (a) {
+            App.updateCartHash();
+        },
     },
     methods: {
         init: function () {
+            App.checkLocalStorage();
             App.updateCartHash();
+            route.run();
+        },
+
+        checkLocalStorage: function () {
+            var hash = window.localStorage.getItem('orderHash');
+            if (hash) {
+                var json = atob(hash);
+                var order = JSON.parse(json);
+
+                App.cart.items = order.items;
+                App.cart.comments = order.comments;
+                App.cart.client = order.client;
+                App.cart.payment = order.payment;
+            }
+        },
+
+        goToPage: function (page) {
+            route.go(page);
+        },
+
+        goToCategory: function (category) {
+            var $category = $(`[data-category-id=${category.id}]`);
+            // console.log('$category', $category, $category.scrollTop());
+            // console.log('$category', $category, $category.position());
+            console.log('$category', $category, $category.offset());
+
+            $('html, body').animate({ scrollTop: $category.offset().top - 80 }, 300);
+
         },
 
         checkIfHasProduct: function (product) {
@@ -155,6 +261,9 @@ var App = new Vue({
             var b64 = btoa(json);
             App.cart.hash = b64;
 
+            window.localStorage.setItem('orderHash', App.cart.hash);
+
+            App.validatePages();
             App.updateWhatsappText();
         },
 
@@ -170,13 +279,16 @@ var App = new Vue({
 
                 App.cart.items[hasProduct].amount = newAmount;
                 App.cart.items[hasProduct].finalPrice = newFinalPrice;
+                App.cart.items[hasProduct].finalPriceFormatted = number_format(newFinalPrice, 2, ',', '.');
             } else {
                 App.cart.items.push({
                     id: product.id,
                     name: product.name,
                     price: product.price,
+                    priceFormatted: product.priceFormatted,
                     amount: 1,
                     finalPrice: product.price,
+                    finalPriceFormatted: number_format(product.price, 2, ',', '.'),
                 });
             }
 
@@ -194,18 +306,15 @@ var App = new Vue({
         },
 
         updateWhatsappText: function () {
-
             var items = [];
             var subtotal = 0;
             for (var i in App.cart.items) {
                 var item = App.cart.items[i];
-                items.push(`R$ ${number_format(item.finalPrice, 2, ',', '.')} -> ${item.amount}x Lanche 1 (R$ ${number_format(item.price, 2, ',', '.')})`);
+                items.push(`R$ ${number_format(item.finalPrice, 2, ',', '.')} -> ${item.amount}x ${item.name} (R$ ${number_format(item.price, 2, ',', '.')})`);
                 subtotal += item.finalPrice;
             }
 
             var address = [];
-
-            // Rua A, 123, Bloco B, Jardim Lalala, Mogi, SP - 08745-250
 
             if (App.cart.client.address) address.push(App.cart.client.address);
             if (App.cart.client.number) address.push(App.cart.client.number);
@@ -252,33 +361,50 @@ ${items.join('\n')}
             var newLink = encodeURI(`https://api.whatsapp.com/send?phone=${App.whatsapp.phone}&text=${App.whatsapp.text}`);
             App.whatsapp.link = newLink;
         },
+
+        validatePages: function () {
+            App.page.pageFinalizacao = false;
+            App.page.pageWhatsappLink = false;
+
+            if (App.cart.items.length) {
+                App.page.pageFinalizacao = true;
+            }
+
+            if (
+                App.cart.client.name
+                && App.cart.client.phone
+                && App.cart.client.cep
+                && App.cart.client.address
+                && App.cart.client.number
+                && App.cart.client.complement
+                && App.cart.client.neighborhood
+                && App.cart.client.city
+                && App.cart.client.state
+                && App.cart.client.reference
+                && App.cart.payment.type
+            ) {
+                if (
+                    App.cart.payment.type === '1'
+                    || (
+                        App.cart.payment.type === '2'
+                        && (
+                            App.cart.payment.diff === '0'
+                            || (
+                                App.cart.payment.diff === '1'
+                                && App.cart.payment.value
+                            )
+                        )
+                    )
+                ) {
+                    App.page.pageWhatsappLink = true;
+                }
+            }
+
+            // cart.payment.type
+            // cart.payment.diff
+            // cart.payment.value
+        },
     },
 });
 
 App.init();
-
-
-// var route = new FMRoute();
-
-// route.get('/', function (vars, next) {
-//     console.log('rota', '/');
-//     route.go('/cardapio');
-//     next();
-// });
-
-// route.get('/cardapio', function (vars, next) {
-//     console.log('rota', '/cardapio');
-//     next();
-// });
-
-// route.get('/finalizacao', function (vars, next) {
-//     console.log('rota', '/finalizacao');
-//     next();
-// });
-
-// route.get('/visualizar/:hash', function (vars, next) {
-//     console.log('rota', '/visualizar', vars.hash);
-//     next();
-// });
-
-// route.run();
