@@ -48,19 +48,15 @@
                     <div v-for="category in categories.list">
                         <h2 class="page-header" :data-category-id="category.id">{{category.name}}</h2>
 
-                        <table class="table table-bordered">
-                            <tbody>
-                                <tr v-for="product in category.products.list">
-                                    <td>
-                                        {{product.name}}
-                                    </td>
-                                    <td width="140">
-                                        <button type="button" class="btn btn-success"
-                                            @click.prevent="addProductToCart(product)">Adicionar</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <ul class="list-group">
+                            <li class="list-group-item" v-for="product in category.products.list">
+                                {{product.name}}
+                                <button type="button" class="btn btn-success btn-xs pull-right"
+                                    @click.prevent="addProductToCart(product)">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            </li>
+                        </ul>
                     </div>
 
                     <div>
@@ -80,9 +76,9 @@
                         <thead>
                             <tr>
                                 <th>Produto</th>
-                                <th>Qtde.</th>
-                                <th>Preço</th>
-                                <th>Subtotal</th>
+                                <th style="text-align: right;">Qtde.</th>
+                                <th style="text-align: right;">Preço</th>
+                                <th style="text-align: right;">Subtotal</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -94,10 +90,12 @@
                         <tbody v-else>
                             <tr v-for="cartItem in cart.items">
                                 <td>{{cartItem.name}}</td>
-                                <td>{{cartItem.amount}}</td>
-                                <td>{{cartItem.priceFormatted}}</td>
-                                <td>{{cartItem.finalPriceFormatted}}</td>
-                                <td>
+                                <td width="120">
+                                    <input type="number" class="form-control" v-model="cartItem.amount" @change.prevent="updateCartItem(cartItem)" style="text-align: right;">
+                                </td>
+                                <td width="80" style="text-align: right;">{{cartItem.priceFormatted}}</td>
+                                <td width="80" style="text-align: right;">{{cartItem.finalPriceFormatted}}</td>
+                                <td width="20">
                                     <button type="button" class="btn btn-danger btn-xs"
                                         @click.prevent="removeProductFromCart(cartItem)">
                                         <span class="glyphicon glyphicon-trash"></span>

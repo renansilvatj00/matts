@@ -267,12 +267,14 @@ var App = new Vue({
             App.updateWhatsappText();
         },
 
-        addProductToCart: function (product) {
+        addProductToCart: function (product, amount) {
+            if (typeof amount === 'undefined') amount = null;
+
             var hasProduct = App.checkIfHasProduct(product);
 
             if (hasProduct !== null) {
                 var currentAmount = App.cart.items[hasProduct].amount;
-                var newAmount = currentAmount + 1;
+                var newAmount = amount ? amount : currentAmount + 1;
 
                 var currentPrice = App.cart.items[hasProduct].price
                 var newFinalPrice = newAmount * currentPrice;
@@ -403,6 +405,13 @@ ${items.join('\n')}
             // cart.payment.type
             // cart.payment.diff
             // cart.payment.value
+        },
+
+        updateCartItem: function (cartItem) {
+            if (cartItem.amount == 0 || !cartItem.amount) {
+                cartItem.amount = 1;
+            }
+            App.addProductToCart(cartItem, cartItem.amount);
         },
     },
 });
