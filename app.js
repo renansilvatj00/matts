@@ -66,6 +66,8 @@ route.get('/whatsapp-link', function (vars, next) {
     next();
 });
 
+var cartAnimationTimeout = null;
+
 var App = new Vue({
     el: '#AppVue',
     data: {
@@ -73,6 +75,7 @@ var App = new Vue({
             current: 'home',
             pageFinalizacao: false,
             pageWhatsappLink: false,
+            disabled: false,
         },
         categories: [],
         cart: {
@@ -104,46 +107,62 @@ var App = new Vue({
         },
     },
     watch: {
-        'cart.comments': function (a) {
+        'cart.comments': function (value) {
             App.updateCartHash();
         },
-        'cart.client.name': function (a) {
+        'cart.client.name': function (value) {
             App.updateCartHash();
         },
-        'cart.client.phone': function (a) {
+        'cart.client.phone': function (value) {
+            var newValue = value.replace(/[^\d\s\-]+/g, '').toString();
+
+            if (newValue !== value) {
+                App.cart.client.phone = newValue;
+            } else {
+                App.updateCartHash();
+            }
+        },
+        'cart.client.cep': function (value) {
+            var newValue = value.replace(/\D+/g, '').toString();
+
+            if (newValue.length > 8) {
+                newValue = newValue.substr(0, 8);
+            }
+
+            if (newValue !== value) {
+                App.cart.client.cep = newValue;
+            } else {
+                App.updateCartHash();
+            }
+        },
+        'cart.client.address': function (value) {
             App.updateCartHash();
         },
-        'cart.client.cep': function (a) {
+        'cart.client.number': function (value) {
             App.updateCartHash();
         },
-        'cart.client.address': function (a) {
+        'cart.client.complement': function (value) {
             App.updateCartHash();
         },
-        'cart.client.number': function (a) {
+        'cart.client.neighborhood': function (value) {
             App.updateCartHash();
         },
-        'cart.client.complement': function (a) {
+        'cart.client.city': function (value) {
             App.updateCartHash();
         },
-        'cart.client.neighborhood': function (a) {
+        'cart.client.state': function (value) {
             App.updateCartHash();
         },
-        'cart.client.city': function (a) {
+        'cart.client.reference': function (value) {
             App.updateCartHash();
         },
-        'cart.client.state': function (a) {
+        'cart.payment.type': function (value) {
             App.updateCartHash();
         },
-        'cart.client.reference': function (a) {
+        'cart.payment.diff': function (value) {
             App.updateCartHash();
         },
-        'cart.payment.type': function (a) {
-            App.updateCartHash();
-        },
-        'cart.payment.diff': function (a) {
-            App.updateCartHash();
-        },
-        'cart.payment.value': function (a) {
+        'cart.payment.value': function (value) {
             App.updateCartHash();
         },
     },
@@ -186,12 +205,7 @@ var App = new Vue({
 
         goToCategory: function (category) {
             var $category = $(`[data-category-id=${category.id}]`);
-            // console.log('$category', $category, $category.scrollTop());
-            // console.log('$category', $category, $category.position());
-            console.log('$category', $category, $category.offset());
-
             $('html, body').animate({ scrollTop: $category.offset().top - 80 }, 300);
-
         },
 
         checkIfHasProduct: function (product) {
@@ -256,6 +270,8 @@ var App = new Vue({
                     finalPriceFormatted: number_format(product.price, 2, ',', '.'),
                 });
             }
+
+            App.cartAnimate();
 
             App.updateCartHash();
         },
@@ -383,7 +399,45 @@ ${items.join('\n')}
             window.localStorage.removeItem('orderHash');
             window.location.replace('/');
         },
+
+        searchCep: function () {
+            App.cart.client.cep = App.cart.client.cep.replace(/\D+/g, '');
+
+            if (App.cart.client.cep.length === 8) {
+                App.page.disabled = true;
+                axios.get(`http://viacep.com.br/ws/${App.cart.client.cep}/json/`).then(function (response) {
+                    App.cart.client.address = response.data.logradouro;
+                    App.cart.client.neighborhood = response.data.bairro;
+                    App.cart.client.city = response.data.localidade;
+                    App.cart.client.state = response.data.uf;
+
+                    App.page.disabled = false;
+                });
+            } else {
+                alert('Informe o cep.');
+            }
+        },
+
+        showCart: function () {
+            $('html, body').stop().animate({
+                scrollTop: $('#cartHeader').offset().top,
+            });
+        },
+
+        cartAnimate: function () {
+            $('.cart-badge').removeClass('animate__animated').removeClass('animate__animated animate__bounce');
+            setTimeout(function () {
+                $('.cart-badge').addClass('animate__animated').addClass('animate__animated animate__bounce');
+                clearTimeout(cartAnimationTimeout);
+                cartAnimationTimeout = setTimeout(function () {
+                    $('.cart-badge').removeClass('animate__animated').removeClass('animate__animated animate__bounce');
+                }, 1000);
+            }, 10);
+        },
     },
 });
 
-App.init();
+$(document).ready(function () {
+    App.init();
+});
+

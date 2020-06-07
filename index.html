@@ -4,14 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matts Burguer</title>
+    <title>Matth's Burguer</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./style.css?v=2">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css">
+    <link rel="stylesheet" href="./style.css?v=3">
 </head>
 
 <body>
     <header class="top-header">
-        <a href="#/">Matt's Burguer</a>
+        <a href="#/">Matth's Burguer</a>
     </header>
 
     <div id="AppVue">
@@ -59,7 +60,7 @@
             <section class="spikes">
                 <div class="container">
 
-                    <h2 class="page-header black">Resumo do Pedido</h2>
+                    <h2 class="page-header black" id="cartHeader">Resumo do Pedido</h2>
 
                     <div class="table-responsive">
                         <table class="table table-western">
@@ -113,6 +114,16 @@
                     <button type="button" class="btn btn-western btn-lg btn-block mt-60"
                         @click.prevent="goToPage('/finalizacao')" :disabled="!page.pageFinalizacao">Continuar</button>
 
+                    <button type="button" class="cart-badge"
+                        @click.prevent="showCart()" v-if="cart.items.length">
+                        <div class="inner">
+                            <div class="icon">
+                                <span class="glyphicon glyphicon-shopping-cart"></span>
+                            </div>
+                            <div class="value">{{cart.items.length}}</div>
+                        </div>
+                    </button>
+
                 </div>
             </section>
 
@@ -134,28 +145,42 @@
                         <div class="col-xs-12 col-sm-3">
                             <div class="form-group">
                                 <label for="iptCep">CEP <span class="text-danger">*</span></label>
-                                <input type="text" id="iptCep" class="form-control" v-model="cart.client.cep">
+
+                                <div class="input-group">
+                                    <input type="text" id="iptCep" class="form-control" v-model="cart.client.cep"
+                                        :disabled="page.disabled" @keyup.enter="searchCep()">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-western" @click.prevent="searchCep()"
+                                            :disabled="page.disabled">
+                                            <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                    </span>
+                                </div>
                             </div>
+
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="iptAddress">Endereço <span class="text-danger">*</span></label>
-                        <input type="text" id="iptAddress" class="form-control" v-model="cart.client.address">
+                        <input type="text" id="iptAddress" class="form-control" v-model="cart.client.address"
+                            :disabled="page.disabled">
                     </div>
 
                     <div class="row">
                         <div class="col-xs-12 col-sm-6">
                             <div class="form-group">
                                 <label for="iptNumber">Número <span class="text-danger">*</span></label>
-                                <input type="text" id="iptNumber" class="form-control" v-model="cart.client.number">
+                                <input type="text" id="iptNumber" class="form-control" v-model="cart.client.number"
+                                    :disabled="page.disabled">
                             </div>
                         </div>
 
                         <div class="col-xs-12 col-sm-6">
                             <div class="form-group">
                                 <label for="iptComplement">Complemento</label>
-                                <input type="text" id="iptComplement" class="form-control" v-model="cart.client.complement">
+                                <input type="text" id="iptComplement" class="form-control"
+                                    v-model="cart.client.complement" :disabled="page.disabled">
                             </div>
                         </div>
                     </div>
@@ -164,28 +189,32 @@
                         <div class="col-xs-12 col-sm-4">
                             <div class="form-group">
                                 <label for="iptNeighborhood">Bairro <span class="text-danger">*</span></label>
-                                <input type="text" id="iptNeighborhood" class="form-control" v-model="cart.client.neighborhood">
+                                <input type="text" id="iptNeighborhood" class="form-control"
+                                    v-model="cart.client.neighborhood" :disabled="page.disabled">
                             </div>
                         </div>
 
                         <div class="col-xs-12 col-sm-4">
                             <div class="form-group">
                                 <label for="iptCity">Cidade <span class="text-danger">*</span></label>
-                                <input type="text" id="iptCity" class="form-control" v-model="cart.client.city">
+                                <input type="text" id="iptCity" class="form-control" v-model="cart.client.city"
+                                    :disabled="page.disabled">
                             </div>
                         </div>
 
                         <div class="col-xs-12 col-sm-4">
                             <div class="form-group">
                                 <label for="iptState">Estado <span class="text-danger">*</span></label>
-                                <input type="text" id="iptState" class="form-control" v-model="cart.client.state">
+                                <input type="text" id="iptState" class="form-control" v-model="cart.client.state"
+                                    :disabled="page.disabled">
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="iptReference">Ponto de referência</label>
-                        <input type="text" id="iptReference" class="form-control" v-model="cart.client.reference">
+                        <input type="text" id="iptReference" class="form-control" v-model="cart.client.reference"
+                            :disabled="page.disabled">
                     </div>
                 </div>
 
@@ -282,7 +311,8 @@
                     A <span class="font-western ml-10 mr-10">Matt's Burger</span> agradece o seu pedido.
                 </p>
 
-                <a :href="whatsapp.link" target="_blank" class="btn btn-western btn-lg mt-60">Clique aqui para enviar<br>o
+                <a :href="whatsapp.link" target="_blank" class="btn btn-western btn-lg mt-60">Clique aqui para
+                    enviar<br>o
                     pedido
                     pelo Whatsapp</a>
 
@@ -314,7 +344,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
     <script src="./fmroute.js"></script>
-    <script src="./app.js?v=2"></script>
+    <script src="./app.js?v=3"></script>
 
 </body>
 
