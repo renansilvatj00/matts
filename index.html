@@ -70,8 +70,7 @@
                                     <th style="text-align: right;">Qtde.</th>
                                     <th style="text-align: right;">Preço</th>
                                     <th style="text-align: right;">Subtotal</th>
-                                    <th style="text-align: right;">#</th>
-                                    <th></th>
+                                    <th style="text-align: center;">#</th>
                                 </tr>
                             </thead>
                             <tbody v-if="!cart.items.length">
@@ -309,7 +308,9 @@
                 <h2 class="page-header">Link do Whatsapp gerado com sucesso!</h2>
 
                 <p class="lead mt-60">
-                    A<br> <span class="font-western ml-10 mr-10">Matth's Burger</span><br> agradece o seu pedido.
+                    A<br>
+                    <span class="font-western ml-10 mr-10">Matth's Burger</span><br>
+                    agradece o seu pedido.
                 </p>
 
                 <a :href="whatsapp.link" target="_blank" class="btn btn-western btn-lg mt-60">Clique aqui para
@@ -324,8 +325,9 @@
                 <hr>
 
                 <p>
-                    <button type="button" style="padding:10px 4px" class="btn btn-warning btn-lg" @click.prevent="goToPage('cardapio')">
-                        Ou clique aqui para alterar o seu pedido
+                    <button type="button" class="btn btn-warning btn-lg" @click.prevent="goToPage('cardapio')">
+                        Ou clique aqui para<span class="hidden-sm hidden-md hidden-lg"><br></span>
+                        alterar o seu pedido
                     </button>
                 </p>
 
