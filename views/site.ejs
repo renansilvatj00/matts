@@ -7,7 +7,7 @@
     <title>Matth's Burguer</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css">
-    <link rel="stylesheet" href="./style.css?v=3">
+    <link rel="stylesheet" href="/style.css?v=3">
 </head>
 
 <body>
@@ -114,8 +114,7 @@
                     <button type="button" class="btn btn-western btn-lg btn-block mt-60"
                         @click.prevent="goToPage('/finalizacao')" :disabled="!page.pageFinalizacao">Continuar</button>
 
-                    <button type="button" class="cart-badge"
-                        @click.prevent="showCart()" v-if="cart.items.length">
+                    <button type="button" class="cart-badge" @click.prevent="showCart()" v-if="cart.items.length">
                         <div class="inner">
                             <div class="icon">
                                 <span class="glyphicon glyphicon-shopping-cart"></span>
@@ -346,8 +345,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
-    <script src="./fmroute.js"></script>
-    <script src="./app.js?v=3"></script>
+    <script src="/fmroute.js"></script>
+    <script src="/app.js?v=3"></script>
 
 </body>
 

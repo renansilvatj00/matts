@@ -1,0 +1,219 @@
+<%- contentFor('body') %>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        <i class="fa fa-shopping-basket"></i> Produtos
+    </h1>
+    <ol class="breadcrumb">
+        <li class="active">
+            <i class="fa fa-shopping-basket"></i> Produtos
+        </li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+    <p>
+        <button class="btn btn-default" @click.prevent="openModalManageProduct()">
+            <span class="fa fa-plus"></span> Adicionar produto
+        </button>
+    </p>
+
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Listagem de Produtos</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <div v-if="!products.list.length">
+                <div class="alert alert-warning">Nenhum produto cadastrado.</div>
+            </div>
+
+            <div class="table-responsive" v-else>
+                <table id="tableAreas" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th width="100" class="text-right">ID</th>
+                            <th>Nome</th>
+                            <th width="80" class="text-right">Preço</th>
+                            <th>Descrição</th>
+                            <th width="80" class="text-center">Ativo</th>
+                            <th width="80" class="text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="product in products.list" :class="{
+                            'text-danger': !product.actived
+                        }">
+                            <td class="text-right">
+                                {{product.id}}
+                            </td>
+                            <td>
+                                {{product.name}}
+                            </td>
+                            <td class="text-right">
+                                {{product.priceFormatted}}
+                            </td>
+                            <td>
+                                {{product.description}}
+                            </td>
+                            <td class="text-center">
+                                {{product.actived ? 'Sim' : 'Não'}}
+                            </td>
+                            <td class="text-right">
+                                <button class="btn btn-xs btn-default" @click.prevent="openModalManageProduct(product)">
+                                    <span class="fa fa-pencil"></span>
+                                </button>
+
+                                <button class="btn btn-xs btn-danger" @click.prevent="openModalRemoveProduct(product)">
+                                    <span class="fa fa-trash"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+
+</section>
+<!-- /.content -->
+
+<!-- Modal Manage Product -->
+<div class="modal fade" id="modalManageProduct" tabindex="-1" role="dialog" aria-labelledby="modalManageProductLabel">
+    <div class="modal-dialog" role="document">
+        <form id="formFiltro" novalidate="" @submit.prevent="handleManageProductSave()">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modalManageProductLabel">
+                        <span v-if="product.fields.id.value">Editar</span>
+                        <span v-else>Adicionar</span>
+                        Produto
+                    </h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="alert" :class="{
+                        'alert-danger': product.error,
+                        'alert-success': !product.error
+                    }" v-if="product.messages.length" v-html="product.messages.join(', ')"></div>
+
+
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="form-grou" :class="{
+                                'has-error': product.fields.name.error
+                            }">
+                                <label for="productName">Nome</label>
+                                <input type="text" id="productName" class="form-control"
+                                    placeholder="Insira o nome da produto" v-model="product.fields.name.value"
+                                    :disabled="product.disabled">
+                                <small class="help-block" v-html="product.fields.name.messages.join(', ')"></small>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="form-grou" :class="{
+                                'has-error': product.fields.price.error
+                            }">
+                                <label for="productPrice">Preço</label>
+                                <input type="number" id="productPrice" class="form-control"
+                                    placeholder="Insira o nome da produto" v-model="product.fields.price.value"
+                                    :disabled="product.disabled">
+                                <small class="help-block" v-html="product.fields.price.messages.join(', ')"></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grou" :class="{
+                        'has-error': product.fields.description.error
+                    }">
+                        <label for="productDescription">Descrição</label>
+                        <textarea id="productDescription" class="form-control" placeholder="Insira o nome da produto"
+                            v-model="product.fields.description.value" :disabled="product.disabled"></textarea>
+                        <small class="help-block" v-html="product.fields.description.messages.join(', ')"></small>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" :disabled="product.disabled">
+                        Salvar
+                    </button>
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Remove Product -->
+<div class="modal fade" id="modalRemoveProduct" tabindex="-1" role="dialog" aria-labelledby="modalRemoveProductLabel">
+    <div class="modal-dialog" role="document">
+        <form id="formFiltro" novalidate="" @submit.prevent="handleRemoveProductSave()">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modalRemoveProductLabel">
+                        Remover Produto
+                    </h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="alert" :class="{
+                        'alert-danger': product.error,
+                        'alert-success': !product.error
+                    }" v-if="product.messages.length" v-html="product.messages.join(', ')"></div>
+
+                    <p class="lead">Deseja realmente remover este produto?</p>
+
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Nome</label>
+                            <div class="col-sm-10">
+                                <p class="form-control-static">{{product.fields.name.value}}</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Preço</label>
+                            <div class="col-sm-10">
+                                <p class="form-control-static">{{product.fields.priceFormatted.value}}</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Descrição</label>
+                            <div class="col-sm-10">
+                                <p class="form-control-static">{{product.fields.description.value}}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" :disabled="product.disabled">
+                        Remover
+                    </button>
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<%- contentFor('scripts') %>
+<script src="/assets/js/admin/products.js"></script>

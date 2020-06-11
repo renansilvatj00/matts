@@ -1,0 +1,315 @@
+<%- contentFor('body') %>
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Dashboard
+    </h1>
+    <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i> Dashboard</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Listagem de Dashboard</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalDashboardFilter">
+                Filtro
+            </button>
+
+            <br>
+            <br>
+
+            <div class="table-responsive">
+                <div id="tableDashboardNotStarted" class="alert alert-secondary" style="text-align: center;">
+                    Nenhuma busca realizada
+                </div>
+
+                <div id="tableDashboardBox"></div>
+            </div>
+        </div>
+        <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+
+</section>
+<!-- /.content -->
+
+<!-- Modal Dashboard Filter -->
+<div class="modal fade" id="modalDashboardFilter" tabindex="-1" role="dialog" aria-labelledby="modalDashboardFilterLabel">
+    <div class="modal-dialog" role="document">
+        <form id="formFiltro" novalidate="">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modalDashboardFilterLabel">Filtro</h4>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label for="ProjetoBusca">Ocorrências ou Tarefas ?</label>
+                                <select class="form-control" id="ProjetoBusca">
+                                    <option value="Ocorrencias" selected="selected">Ocorrências</option>
+                                    <option value="Tarefas">Tarefas</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label for="data_inicio">Data de Abertura Inicial:</label>
+                                <input type="text" class="form-control datepicker" id="data_inicio" maxlength="10"
+                                    value="2020-04-17">
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="form-group">
+                                <label for="data_fim">Data de Abertura Final:</label>
+                                <input type="text" class="form-control datepicker" id="data_fim" maxlength="10"
+                                    value="2020-04-17">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="StatusBusca" id="example">Status:</label>
+
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6">
+                                <label><input type="radio" name="radioStatus" class="radio-options"
+                                        data-target="#StatusBusca" value="1" checked=""> Todos</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <label><input type="radio" name="radioStatus" class="radio-options"
+                                        data-target="#StatusBusca" value="0"> Escolher</label>
+                            </div>
+                        </div>
+
+                        <select class="form-control" id="StatusBusca" multiple="" disabled="">
+                            <option value="Aberto">ABERTO</option>
+                            <option value="Aguardando Resposta">AGUARDANDO RESPOSTA</option>
+                            <option value="Atualizado">ATUALIZADO</option>
+                            <option value="DirecionadoAS">DIRECIONADO AREA SOLUCIONADORA</option>
+                            <option value="Fechado">FECHADO</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ResponsavelBusca">Responsável:</label>
+
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6">
+                                <label><input type="radio" name="radioResponsavel" class="radio-options"
+                                        data-target="#ResponsavelBusca" value="1" checked=""> Todos</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <label><input type="radio" name="radioResponsavel" class="radio-options"
+                                        data-target="#ResponsavelBusca" value="0"> Escolher</label>
+                            </div>
+                        </div>
+
+                        <select class="form-control" id="ResponsavelBusca" multiple="" disabled="">
+                            <option value=""> -- Sem Responsável -- </option>
+                            <option value="5132">ALINE CRISTINA CAMPOS DE OLIVEIRA</option>
+                            <option value="7401">ALINE ELOI DOS SANTOS SILVA</option>
+                            <option value="5136">AMANDA DA SILVA ARAUJO</option>
+                            <option value="6693">AMANDA DE OLIVEIRA SILVA</option>
+                            <option value="3352">ANA FLAVIA VIEIRA DIAS</option>
+                            <option value="4071">ANDREIA CRISTINA PEREIRA DA SILVA</option>
+                            <option value="3415">ANDREIA DA SILVA VIEIRA LEITE</option>
+                            <option value="5115">BRUNO DE PAULA MEDEIROS</option>
+                            <option value="9995">BRUNO VIEIRA LUCIO</option>
+                            <option value="2907">CAMILA ESTEFANNY PRADO DOS OUROS</option>
+                            <option value="8407">CAMILA GABRIELLE BRONCA GOMES DA MOTTA</option>
+                            <option value="9919">CAMILA MARTINS MENDONCA</option>
+                            <option value="2800">CAROLINE MIANNI ANDRADE</option>
+                            <option value="7686">CINTIA DA SILVA SANTOS</option>
+                            <option value="9283">CLEBER SOTTE</option>
+                            <option value="11356">CLEBERSON DA SILVA PEREIRA</option>
+                            <option value="2146">DANIELE APARECIDA SILVEIRA GOMES</option>
+                            <option value="2938">DANIELE CRISPIN DAS DORES</option>
+                            <option value="5303">DEBORA CARLA DE SOUZA</option>
+                            <option value="10280">DEBORA MIKAELA SOARES DE JESUS</option>
+                            <option value="5114">DIOGO ANTONIO OLIVEIRA DE MELO</option>
+                            <option value="4467">DÉBORA GUIMARÃES VANDERLÉR</option>
+                            <option value="7643">ELAINE MIRANDA DA SILVA</option>
+                            <option value="3160">EMANUEL SILVERIO BATISTA</option>
+                            <option value="2652">ERICA CRISTINA FERREIRA RAMIRO</option>
+                            <option value="4192">FABIANO JUNIO TEIXEIRA DOS SANTOS</option>
+                            <option value="10327">FABIO HENRIQUE RODRIGUES ALVES DA SILVA</option>
+                            <option value="9792">FERNANDA VITORIA DA COSTA SILVA</option>
+                            <option value="8738">FRANCINY CUNHA ALMEIDA</option>
+                            <option value="9626">GABRIEL DOS SANTOS SILVA</option>
+                            <option value="8583">GILBERTO GOMES DE SA JUNIOR</option>
+                            <option value="4266">GREGORY FELICETTI BACELLAR</option>
+                            <option value="5073">GREICICLER APARECIDA DA SILVA</option>
+                            <option value="11070">GUSTAVO DE GODOI CINTRA</option>
+                            <option value="10535">ISABELY MACHADO DE MACEDO</option>
+                            <option value="7576">JACQUELINE AVELAR BARBOSA</option>
+                            <option value="2478">JADILMA PEREIRA DE LIMA</option>
+                            <option value="2888">JANAINA LIMA SIQUEIRA</option>
+                            <option value="8244">JEFERSON LOPES DE SOUZA</option>
+                            <option value="11064">JENNIFER RAMALHO SILVA</option>
+                            <option value="4527">JESSICA FERNANDA DE ASSIS</option>
+                            <option value="8502">JESSICA LAIS CASTRO ALBERTI</option>
+                            <option value="8329">JOSE AUGUSTO TRINDADE</option>
+                            <option value="10134">JOSE RICARDO FORNACIARI</option>
+                            <option value="5066">JULIANA DA SILVA FERRAZ</option>
+                            <option value="3176">KARINA CINTAS VILAR</option>
+                            <option value="11214">KATHLEEN DA SILVA FELIPE (1)</option>
+                            <option value="10405">LAURA CRISTINA FERREIRA</option>
+                            <option value="5388">LEONARDO AUGUSTO ELIAS DE OLIVEIRA</option>
+                            <option value="8538">LEONARDO NASCIMENTO DE OLIVEIRA</option>
+                            <option value="10334">LEVI ALBERTO DE ANDRADE</option>
+                            <option value="5068">LUANA DE SOUZA SILVA RAMALHO</option>
+                            <option value="4739">LUCAS DE SOUZA BATISTA</option>
+                            <option value="10587">LUCAS LOPES</option>
+                            <option value="4203">LUIS OTAVIO SOARES LIMA</option>
+                            <option value="9073">LUKAS ALMEIDA BARBOSA</option>
+                            <option value="9927">MAIRA OROSCO LIMA</option>
+                            <option value="4738">MARCELO TAVARES DOS SANTOS</option>
+                            <option value="10656">MARCIA REGINA DE OLIVEIRA DOS SANTOS</option>
+                            <option value="9089">MARILU MELO VIEIRA</option>
+                            <option value="3637">MARLI APARECIDA SANTOS DI MARIO</option>
+                            <option value="10040">MATHEUS ADELMO PEREIRA</option>
+                            <option value="10614">MATHEUS GABRIEL EVARISTO TOLEDO</option>
+                            <option value="2762">MICHELLE DE JESUS LIMA</option>
+                            <option value="5080">MIRIA CAROLINE VENDRAMINI DA COSTA</option>
+                            <option value="5660">MONICA DOS SANTOS GOMES</option>
+                            <option value="6864">NATALIA RIBEIRO</option>
+                            <option value="8493">NOEMI ANDRADE RAMOS</option>
+                            <option value="456">PAULO CESAR BATISTA SILVA</option>
+                            <option value="11670">PAULO CESAR PESSOA DA SILVA</option>
+                            <option value="6634">PEDRO HENRIQUE CARDOSO DOS SANTOS</option>
+                            <option value="5064">RAFAELA MARIA DE ARAUJO TORTELI</option>
+                            <option value="6733">RAPHAEL DIAS GOMES</option>
+                            <option value="8256">RENAN FELIPE DA SILVA</option>
+                            <option value="5083">ROBERTA FERREIRA DE ALMEIDA</option>
+                            <option value="5003">RODOLFO DUARTE RIBAS</option>
+                            <option value="2834">RODRIGO AFONSO DE SOUZA</option>
+                            <option value="5797">RONALDO JUNIOR VIANA SANTOS</option>
+                            <option value="4021">SKARLET LOPES DOS SANTOS</option>
+                            <option value="5800">THATYANE CAROLINE GOMES DOS REIS</option>
+                            <option value="671">VANESSA BARBOSA SIMÕES DE ANDRADE</option>
+                            <option value="7100">VANESSA DA SILVA MENDES</option>
+                            <option value="10985">VILMA DUARTE DA SILVA</option>
+                            <option value="5690">VINICIOS ANTONIO DOS SANTOS</option>
+                            <option value="9941">VINICIUS LISBOA SILVA</option>
+                        </select>
+                    </div>
+
+                    <input type="hidden" id="OcorrenciaIdBusca" value="">
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" id="gerarDashboard2" class="btn btn-success">Gerar Dashboard</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<%- contentFor('scripts') %>
+<script>
+    var table = null;
+
+    function generateDataTable() {
+        if (!table) {
+            $('#tableDashboardNotStarted').remove();
+
+            $('#tableDashboardBox').html(`
+                <div class="card" style="background-color: #f9f9f9; border-color: #eef1f2;">
+                    <div class="card-body" id="allFilters">
+                    </div>
+                </div>
+                <table id="tableDashboard" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ocorrência</th>
+                            <th>Email</th>
+                            <th>Assunto</th>
+                            <th>Tipo</th>
+                            <th>Cliente</th>
+                            <th>Status</th>
+                            <th>Data de Abertura</th>
+                            <th>Responsável</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `);
+
+            table = $('#tableDashboard').DataTable({
+                language: {
+                    url: '/lib/Portuguese-Brasil.json',
+                },
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '/api/dashboard',
+                    data: function (d) {
+                        $('#formFiltro input, #formFiltro select, #formFiltro textarea').each(function () {
+                            var id = $(this).attr('id');
+                            if (id) {
+                                var val = $(this).val();
+                                console.log('item', id, val);
+                                d[id] = val;
+                            }
+                        });
+                    },
+                },
+                columns: [
+                    { data: 'OcorrenciaID' },
+                    { data: 'field_4' },
+                    { data: 'field_5' },
+                    { data: 'field_12' },
+                    { data: 'field_6' },
+                    { data: 'field_13' },
+                    { data: 'field_16' },
+                    { data: 'field_21' },
+                ],
+            });
+        } else {
+            table.ajax.reload();
+        }
+    }
+
+    $(function () {
+        $('.radio-options').change(function () {
+            var target = $(this).attr('data-target');
+            var val = !!parseInt($(this).val());
+
+            if (val) {
+                $(target + ' option:selected').prop('selected', false);
+            }
+
+            $(target).attr('disabled', val);
+        });
+
+        $('#formFiltro').off('submit').on('submit', function (e) {
+            e.preventDefault();
+
+            generateDataTable();
+
+            $('#modalDashboardFilter').modal('hide');
+        });
+
+        $('#modalDashboardFilter').modal('show');
+    });
+</script>

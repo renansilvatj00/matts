@@ -1,0 +1,22 @@
+<ul class="sidebar-menu" data-widget="tree">
+    <li class="header">MENU PRINCIPAL</li>
+
+    <li class="<%= page == '/admin/dashboard'  ? 'active menu-open' : '' %>">
+        <a href="/admin/dashboard">
+            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+        </a>
+    </li>
+
+    <li class="<%= page == '/admin/products'  ? 'active menu-open' : '' %>">
+        <a href="/admin/products">
+            <i class="fa fa-shopping-basket"></i> <span>Produtos</span>
+        </a>
+    </li>
+
+    <li>
+        <a href="#" @click.prevent="logout()">
+            <i class="fa fa-sign-out"></i> <span>Sair</span>
+        </a>
+    </li>
+
+</ul>

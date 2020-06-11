@@ -1,0 +1,49 @@
+<ul class="sidebar-menu" data-widget="tree">
+    <li class="header">MENU PRINCIPAL</li>
+    <li class="<% if (page == '/') { %>active<% } %>">
+        <a href="/">
+            <i class="fa fa-home"></i> <span>Início</span>
+        </a>
+    </li>
+    <li class="treeview <% if (
+        page == '/areas'
+        || page == '/subareas'
+        || page == '/forms'
+        || page == '/process'
+        || page == '/users-profiles'
+    ) { %>active menu-open<% } %>">
+        <a href="#">
+            <i class="fa fa-cogs"></i> <span>Configurações</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li class="<%= page == '/areas'  ? 'active menu-open' : '' %>"><a href="/areas"><i class="fa fa-circle-o"></i> Áreas</a></li>
+            <li class="<%= page == '/subareas'  ? 'active menu-open' : '' %>"><a href="/subareas"><i class="fa fa-circle-o"></i> Subáreas</a></li>
+            <li class="<%= page == '/forms'  ? 'active menu-open' : '' %>"><a href="/forms"><i class="fa fa-circle-o"></i> Formulários</a></li>
+            <li class="<%= page == '/process'  ? 'active menu-open' : '' %>"><a href="/process"><i class="fa fa-circle-o"></i> Processos</a></li>
+            <li class="<%= page == '/users-profiles'  ? 'active menu-open' : '' %>"><a href="/users-profiles"><i class="fa fa-circle-o"></i> Usuário/Perfil</a></li>
+        </ul>
+    </li>
+    <li class="<%= page == '/dashboard'  ? 'active menu-open' : '' %>">
+        <a href="/dashboard">
+            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+        </a>
+    </li>
+    <li class="treeview <% if (
+        page == '/occurrences'
+        || page == '/tasks'
+    ) { %>active menu-open<% } %>">
+        <a href="#">
+            <i class="fa fa-bar-chart"></i> <span>Relatórios</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li class="<%= page == '/occurrences'  ? 'active menu-open' : '' %>"><a href="/occurrences"><i class="fa fa-circle-o"></i> Ocorrências</a></li>
+            <li class="<%= page == '/tasks'  ? 'active menu-open' : '' %>"><a href="/tasks"><i class="fa fa-circle-o"></i> Tarefas</a></li>
+        </ul>
+    </li>
+</ul>

@@ -1,0 +1,22 @@
+{
+  "name": "public",
+  "authors": [
+    "Leandro Macedo <lfmacedo@artit.com.br>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "admin-lte": "^2.4",
+    "axios": "^0.19.2",
+    "vue": "^2.6.11"
+  }
+}

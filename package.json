@@ -1,0 +1,36 @@
+{
+  "name": "matts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/renansilvatj00/matts.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/renansilvatj00/matts/issues"
+  },
+  "homepage": "https://github.com/renansilvatj00/matts#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "cookie-parser": "^1.4.5",
+    "dotenv-safe": "^8.2.0",
+    "ejs": "^3.1.2",
+    "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.0",
+    "express-http-proxy": "^1.6.0",
+    "helmet": "^3.22.0",
+    "http": "0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "lowdb": "^1.0.0",
+    "morgan": "^1.10.0",
+    "node-json-db": "^1.1.0",
+    "shortid": "^2.2.15"
+  }
+}
